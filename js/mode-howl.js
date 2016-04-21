@@ -23,15 +23,15 @@ var HowlHighlightRules = function() {
         },
         {
           token : ["constant.language", "text", "variable", "keyword", "text", "variable"],
-          regex : "^(PREFIX)(\\s+)([^:]+)(:)(\\s*)(.*)$"
+          regex : "^(PREFIX)(\\s+)([^:]+)(:)(\\s+)(.*)$"
         },
         {
           token : ["constant.language", "text", "variable", "keyword", "text", "variable"],
-          regex : "^(LABEL)(\\s+)([^:]+)(:)(\\s*)(.*)$"
+          regex : "^(LABEL)(\\s+)([^:]+)(:)(\\s+)(.*)$"
         },
         {
           token : ["constant.language", "text", "variable", "keyword", "text", "variable"],
-          regex : "^(TYPE)(\\s+)([^:]+)(:)(\\s*)(.*)$"
+          regex : "^(TYPE)(\\s+)([^:]+)(:)(\\s+)(.*)$"
         },
         {
           token : ["constant.language", "text", "variable"],
