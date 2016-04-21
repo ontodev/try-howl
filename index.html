@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Humane OWL</title>
+
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+
+  <style type="text/css" media="screen">
+    #container {
+      width: 60em;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #editor, #results {
+      height: 240pt;
+    }
+  </style>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="js/html5shiv.min.js"></script>
+    <script src="js/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+
+<a href="https://github.com/ontodev/howl"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+<div id="container" class="container">
+
+  <h1>Humane OWL
+    <small>
+
+    <a href="https://en.wikipedia.org/wiki/Resource_Description_Framework">RDF</a>
+    and
+    <a href="https://en.wikipedia.org/wiki/Web_Ontology_Language">OWL</a>
+    for humans.
+
+  </small>
+  </h1>
+
+  <div class="row" style="height: 36pt">
+    <ul id="selector" class="nav nav-pills nav-justified">
+      <li role="presentation" class="active"><a href="#">Example</a></li>
+      <li role="presentation"><a href="#">Comments</a></li>
+      <li role="presentation"><a href="#">Base</a></li>
+      <li role="presentation"><a href="#">Prefixes</a></li>
+      <li role="presentation"><a href="#">Labels</a></li>
+      <li role="presentation"><a href="#">Types</a></li>
+      <li role="presentation"><a href="#">Statements</a></li>
+      <li role="presentation"><a href="#">Annotations</a></li>
+      <li role="presentation"><a href="#">Graphs</a></li>
+    </ul>
+  </div>
+
+  <div class="row">
+    <pre id="editor"></pre>
+  </div>
+
+  <div id="controls" class="row text-center" style="height: 32pt">
+    <button type="button" id="convert" class="btn btn-primary">Convert!</button>
+    from HOWL to
+    <a href="https://en.wikipedia.org/wiki/N-Triples#N-Quads">N-Quads</a>
+  </div>
+
+  <div class="row">
+    <pre id="results"></pre>
+  </div>
+
+  <div class="row" style="height: 48pt">
+    <div class="col-md-6">
+      <span class="octicon octicon-mark-github"></span>
+      <a href="https://github.com/ontodev/howl">https://github.com/ontodev/howl</a>
+    </div>
+    <div class="col-md-6 text-right">
+      &copy; 2016 James A. Overton
+    </div>
+  </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/howl.js" type="text/javascript" charset="utf-8"></script>
+<script>
+var shared = [
+  "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+  "PREFIX xsd: <http://www.w4.org/2001/XMLSchema#>",
+  "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
+  "PREFIX obo: <http://purl.obolibrary.org/obo/>",
+  "PREFIX ex: <http://example.com/>"
+];
+
+var example = [
+  "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+  "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
+  "PREFIX obo: <http://purl.obolibrary.org/obo/>",
+  "PREFIX ex: <http://example.com/>",
+  "",
+  "LABEL rdf:type: type",
+  "LABEL rdfs:label: label",
+  "LABEL obo:BFO_0000051: has part",
+  "LABEL obo:BFO_0000040: material entity",
+  "",
+  "ex:ontology",
+  "label: Example Ontology",
+  "type:> owl:Ontology",
+  "",
+  "ex:class",
+  "label: Example Class",
+  "type:> owl:Class",
+  "rdfs:subClassOf:>> 'has part' some 'material entity'",
+  "> rdfs:comment: Annotation on subclass axiom."
+];
+
+var comments = [
+  "# Lines that start with '#' are just comments"
+];
+
+var base = [
+  "# Set a base IRI...",
+  "BASE <http://example.com/>",
+  "",
+  "# then use relative IRIs",
+  "<ontology>",
+  "<my-label>: Example Ontology"
+];
+
+var prefixes = [
+  "# Define your prefixes...",
+  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+  "PREFIX ex: <http://example.com/>",
+  "",
+  "# then abbreviate your IRIs",
+  "ex:ontology",
+  "rdfs:label: Example Ontology"
+];
+
+var labels = [
+  "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+  "PREFIX obo: <http://purl.obolibrary.org/obo/>",
+  "PREFIX ex: <http://example.com/>",
+  "",
+  "# Specify your own labels...",
+  "LABEL rdf:type: type",
+  "LABEL rdfs:label: label",
+  "LABEL obo:IAO_0000115: definition",
+  "",
+  "# then use them anywhere",
+  "ex:frog",
+  "label: Frog",
+  "definition: A circular definition of frog.",
+  "",
+  "# Your 'rdfs:label:' statments also specify labels!",
+  "ex:kermit",
+  "type:> Frog"
+]
+
+var types = [
+  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+  "PREFIX xsd: <http://www.w4.org/2001/XMLSchema#>",
+  "PREFIX ex: <http://example.com/>",
+  "",
+  "LABEL rdfs:label: label",
+  "LABEL rdfs:comment: comment",
+  "",
+  "# Set a language or datatype...",
+  "TYPE label: @en",
+  "TYPE comment: xsd:string",
+  "",
+  "ex:ontology",
+  "# that will apply by default",
+  "label: Example Ontology",
+  "comment: A comment string",
+  "",
+  "# but can be overridden",
+  "label: Un autre nom@fr",
+  "comment: 1000^^xsd:integer"
+];
+
+var statements = [
+  "LABEL obo:BFO_0000051: has part",
+  "LABEL obo:BFO_0000040: material entity",
+  "",
+  "# Set the current subject",
+  "ex:subject",
+  "",
+  "# Use ': ' for literal values",
+  "rdfs:label: Example Subject",
+  "",
+  "# Use ':> ' for links",
+  "rdf:type:> owl:Class",
+  "",
+  "# Use ':>> ' for complex expressions",
+  "rdfs:subClassOf:>> 'has part' some 'material entity'",
+  "",
+  "# Use indentation to continue long lines",
+  "rdfs:comment: Values can span multiple lines,",
+  "  and include blank lines...",
+  "",
+  "  as long as each non-blank line is indented two spaces."
+];
+
+var annotations = [
+  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+  "PREFIX ex: <http://example.com/>",
+  "",
+  "LABEL rdfs:label: label",
+  "LABEL rdfs:comment: comment",
+  "",
+  "# Easily add OWL annotations, even annotations on annotations...",
+  "ex:ontology",
+  "label: Example Ontology",
+  "comment: A comment on Example Ontology.",
+  "> comment: An annotation on a comment.",
+  ">> comment: An annotation on an annotation.",
+];
+
+var graphs = [
+  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+  "PREFIX ex: <http://example.com/>",
+  "",
+  "# Change to a named graph",
+  "GRAPH ex:graph",
+  "rdfs:label: Example Graph",
+  "",
+  "ex:first",
+  "rdfs:comment: This subject is in the Example Graph.",
+  "",
+  "# Then back to the default graph",
+  "GRAPH",
+  "",
+  "ex:second",
+  "rdfs:comment: This subject is in the default graph.",
+  "",
+  "# WARNING: OWL only uses the default graph!"
+];
+
+function join(args) {
+  var outputs = [];
+  for (var i = 0; i < arguments.length; i++) {
+    outputs[i] = arguments[i].join("\n");
+  }
+  return outputs.join("\n\n");
+}
+
+var code = {
+  "Example":     join(example),
+  "Comments":    join(comments),
+  "Base":        join(base),
+  "Prefixes":    join(prefixes),
+  "Labels":      join(labels),
+  "Types":       join(types),
+  "Statements":  join(shared, statements),
+  "Annotations": join(annotations),
+  "Graphs":      join(graphs)
+};
+
+var editor = ace.edit("editor");
+editor.setTheme("ace/theme/dawn");
+editor.session.setMode("ace/mode/howl");
+
+var results = ace.edit("results");
+results.setTheme("ace/theme/dawn");
+results.session.setMode("ace/mode/nquads");
+results.setReadOnly(true);
+
+function selectFirstComment() {
+  var lines = editor.getSession().getDocument().getAllLines();
+  editor.gotoLine(1);
+  editor.clearSelection();
+  for (var i = lines.length - 1; i >= 0; i--) {
+    if (lines[i].startsWith("#")) {
+      var selection = editor.getSelection();
+      var range = selection.getLineRange(i);
+      selection.addRange(range);
+    }
+  }
+  editor.scrollToRow(0);
+}
+
+function setExample(label) {
+  var content = code[label];
+  editor.setValue(content);
+  window.setTimeout(selectFirstComment, 100);
+  convert();
+}
+setExample("Example");
+
+$('#selector a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+  setExample(this.innerHTML);
+})
+
+function convert() {
+  results.setValue(howl.api.convert_to_quads(editor.getValue()).toString());
+  results.clearSelection();
+  results.getSelection().moveCursorTo(0, 0, false);
+}
+
+document.getElementById("convert").onclick = convert;
+convert();
+</script>
+
+</body>
+</html>
