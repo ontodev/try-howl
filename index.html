@@ -97,7 +97,7 @@ var shared = [
   "PREFIX ex: <http://example.com/>"
 ];
 
-var example = [
+var small_example = [
   "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
   "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
   "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
@@ -118,6 +118,118 @@ var example = [
   "type:> owl:Class",
   "rdfs:subClassOf:>> 'has part' some 'material entity'",
   "> rdfs:comment: Annotation on subclass axiom."
+];
+
+var example = [
+  "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+  "PREFIX xsd: <http://www.w4.org/2001/XMLSchema#>",
+  "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
+  "PREFIX obo: <http://purl.obolibrary.org/obo/>",
+  "PREFIX OBI: <http://purl.obolibrary.org/obo/OBI_>",
+  "PREFIX BFO: <http://purl.obolibrary.org/obo/BFO_>",
+  "PREFIX RO:  <http://purl.obolibrary.org/obo/RO_>",
+  "PREFIX IAO: <http://purl.obolibrary.org/obo/IAO_>",
+  "",
+  "LABEL rdf:type: type",
+  "LABEL rdfs:label: label",
+  "LABEL rdfs:subClassOf: subclass of",
+  "LABEL owl:equivalentClass: equivalent to",
+  "",
+  "obo:obi/obi_core.owl",
+  "type:> owl:Ontology",
+  "owl:versionIRI:> obo:obi/2016-04-21/obi_core.owl",
+  "",
+  "BFO:0000040",
+  "label: material entity",
+  "type:> owl:Class",
+  "",
+  "BFO:0000051",
+  "label: has part",
+  "type:> owl:ObjectProperty",
+  "",
+  "BFO:0000055",
+  "label: realizes",
+  "type:> owl:ObjectProperty",
+  "",
+  "IAO:0000030",
+  "label: information content entity",
+  "type:> owl:Class",
+  "",
+  "IAO:0000112",
+  "label: example of usage",
+  "type:> owl:AnnotationProperty",
+  "",
+  "IAO:0000115",
+  "label: definition",
+  "type:> owl:AnnotationProperty",
+  "",
+  "IAO:0000117",
+  "label: term editor",
+  "type:> owl:AnnotationProperty",
+  "",
+  "IAO:0000118",
+  "label: alternative term",
+  "type:> owl:AnnotationProperty",
+  "",
+  "IAO:0000119",
+  "label: definition source",
+  "type:> owl:AnnotationProperty",
+  "",
+  "IAO:0000136",
+  "label: is about",
+  "type:> owl:ObjectProperty",
+  "",
+  "OBI:0000011",
+  "label: planned process",
+  "type:> owl:Class",
+  "",
+  "OBI:0000067",
+  "label: evaluant role",
+  "type:> owl:Class",
+  "",
+  "OBI:0000070",
+  "label: assay",
+  "type:> owl:Class",
+  "",
+  "OBI:0000293",
+  "label: has_specified_input",
+  "type:> owl:ObjectProperty",
+  "",
+  "OBI:0000299",
+  "label: has_specified_output",
+  "type:> owl:ObjectProperty",
+  "",
+  "OBI:0000417",
+  "label: achieves_planned_objective",
+  "type:> owl:ObjectProperty",
+  "",
+  "OBI:0000441",
+  "label: assay objective",
+  "type:> owl:Class",
+  "",
+  "RO:0000087",
+  "label: has role",
+  "type:> owl:ObjectProperty",
+  "",
+  "assay",
+  "definition: A planned process with the objective to produce information about the material entity that is the evaluant, by physically examining it or its proxies.",
+  "definition source: OBI branch derived",
+  "example of usage: Assay the wavelength of light emitted by excited Neon atoms. Count of geese flying over a house.",
+  "term editor: PlanAndPlannedProcess Branch",
+  "alternative term: measuring",
+  "alternative term: scientific observation",
+  "equivalent to:>> achieves_planned_objective some 'assay objective'",
+  "subclass of:>> 'planned process'",
+  "subclass of:>> has_specified_input some",
+  "  ('material entity'",
+  "   and ('has role' some 'evaluant role'))",
+  "subclass of:>> has_specified_output some",
+  "  ('information content entity'",
+  "   and ('is about' some",
+  "      ('material entity'",
+  "       and ('has role' some 'evaluant role'))))",
+  "subclass of:>> realizes some 'evaluant role'"
 ];
 
 var comments = [
@@ -267,6 +379,7 @@ var code = {
 var editor = ace.edit("editor");
 editor.setTheme("ace/theme/dawn");
 editor.session.setMode("ace/mode/howl");
+editor.session.setUseWrapMode(true);
 
 var results = ace.edit("results");
 results.setTheme("ace/theme/dawn");
@@ -294,6 +407,7 @@ function setExample(label) {
   convert();
 }
 setExample("Example");
+window.setTimeout(function() {editor.scrollToRow(91)}, 100);
 
 $('#selector a').click(function (e) {
   e.preventDefault()
