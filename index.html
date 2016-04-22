@@ -15,7 +15,7 @@
       margin-left: auto;
       margin-right: auto;
     }
-    #editor, #results {
+    .editor, .result {
       height: 240pt;
     }
   </style>
@@ -45,31 +45,207 @@
   </h1>
 
   <div class="row" style="height: 36pt">
-    <ul id="selector" class="nav nav-pills nav-justified">
-      <li role="presentation" class="active"><a href="#">Example</a></li>
-      <li role="presentation"><a href="#">Comments</a></li>
-      <li role="presentation"><a href="#">Base</a></li>
-      <li role="presentation"><a href="#">Prefixes</a></li>
-      <li role="presentation"><a href="#">Labels</a></li>
-      <li role="presentation"><a href="#">Types</a></li>
-      <li role="presentation"><a href="#">Statements</a></li>
-      <li role="presentation"><a href="#">Annotations</a></li>
-      <li role="presentation"><a href="#">Graphs</a></li>
+    <ul id="editors" class="nav nav-tabs">
+      <li role="presentation"><a href="#prefixes">Prefixes</a></li>
+      <li role="presentation"><a href="#base">Base</a></li>
+      <li role="presentation"><a href="#labels">Labels</a></li>
+      <li role="presentation"><a href="#types">Types</a></li>
+      <li role="presentation"><a href="#tables">Tables</a></li>
+      <li role="presentation" class="active"><a href="#subjects">Subjects</a></li>
+      <li role="presentation"><a href="#statements">Statements</a></li>
+      <li role="presentation"><a href="#annotations">Annotations</a></li>
+      <li role="presentation"><a href="#graphs">Graphs</a></li>
     </ul>
   </div>
 
-  <div class="row">
-    <pre id="editor"></pre>
+  <div class="row tab-content">
+    <div id="prefixes" role="tabpanel" class="tab-pane">
+      <pre id="prefixes-editor" class="editor">
+# Define your prefixes...
+PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX xsd: &lt;http://www.w4.org/2001/XMLSchema#&gt;
+PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
+PREFIX obo: &lt;http://purl.obolibrary.org/obo/&gt;
+PREFIX ex: &lt;http://example.com/&gt;
+
+# then abbreviate your IRIs
+# so &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;
+# can be shortened to: rdf:type</pre>
+    </div>
+
+    <div id="base" role="tabpanel" class="tab-pane">
+      <pre id="base-editor" class="editor">
+# Set a base IRI...
+BASE &lt;http://example.com/&gt;
+
+# then use relative IRIs in angle brackets: &lt; &gt;
+# so &lt;http://example.com/howl-demo.owl&gt; 
+# can be shortened to &lt;howl-demo.owl&gt; 
+&lt;howl-demo.owl&gt;
+rdfs:label: Example Ontology
+rdf:type:> owl:Ontology</pre>
+    </div>
+
+    <div id="labels" role="tabpanel" class="tab-pane">
+      <pre id="labels-editor" class="editor">
+# Specify your own labels...
+LABEL rdf:type: type
+LABEL rdfs:label: label
+LABEL rdfs:comment: comment
+LABEL rdfs:subClassOf: subclass of
+LABEL owl:equivalentClass: equivalent to
+LABEL obo:IAO_0000115: definition
+
+# then use them in your statements
+ex:frog
+label: Frog
+definition: A circular definition of frog.
+
+# Your 'rdfs:label' statments also specify labels
+# that you can use in subsequent statements,
+# e.g. 'label: Frog' can be used as Kermit's type
+ex:kermit
+type:&gt; Frog</pre>
+    </div>
+
+    <div id="types" role="tabpanel" class="tab-pane">
+      <pre id="types-editor" class="editor">
+# Set a language or datatype...
+TYPE label: @en
+TYPE comment: xsd:string
+
+ex:french-fries
+# that will apply by default
+label: French Fries
+comment: A comment string
+
+# but can be overridden
+label: Frites@fr
+comment: 1000^^xsd:integer</pre>
+    </div>
+
+    <div id="tables" role="tabpanel" class="tab-pane">
+      <pre id="tables-editor" class="editor">
+# It's easy to use tables with HOWL
+# and define many terms concisely
+SUBJECT          label:                      type:&gt;
+obo:BFO_0000040  material entity             owl:Class
+obo:BFO_0000051  has part                    owl:ObjectProperty
+obo:BFO_0000055  realizes                    owl:ObjectProperty
+obo:IAO_0000030  information content entity  owl:Class
+obo:IAO_0000112  example of usage            owl:AnnotationProperty
+obo:IAO_0000115  definition                  owl:AnnotationProperty
+obo:IAO_0000117  term editor                 owl:AnnotationProperty
+obo:IAO_0000118  alternative term            owl:AnnotationProperty
+obo:IAO_0000119  definition source           owl:AnnotationProperty
+obo:IAO_0000136  is about                    owl:ObjectProperty
+obo:OBI_0000011  planned process             owl:Class
+obo:OBI_0000067  evaluant role               owl:Class
+obo:OBI_0000070  assay                       owl:Class
+obo:OBI_0000293  has_specified_input         owl:ObjectProperty
+obo:OBI_0000299  has_specified_output        owl:ObjectProperty
+obo:OBI_0000417  achieves_planned_objective  owl:ObjectProperty
+obo:OBI_0000441  assay objective             owl:Class
+obo:RO_0000087   has role                    owl:ObjectProperty</pre>
+    </div>
+
+    <div id="subjects" role="tabpanel" class="tab-pane active">
+      <pre id="subjects-editor" class="editor">
+# EDIT ME!
+# Then press "Convert" to see the results of your changes below!
+# Lines that start with '#' are just comments.
+
+# Set the current subject using a label, prefixed name, or IRI
+assay
+definition: A planned process with the objective to produce information about the material entity that is the evaluant, by physically examining it or its proxies.
+type:&gt; owl:Class
+equivalent to:&gt;&gt; achieves_planned_objective some 'assay objective'</pre>
+    </div>
+
+    <div id="statements" role="tabpanel" class="tab-pane">
+      <pre id="statements-editor" class="editor">
+# Use ': ' for literal values: strings, numbers, dates, etc.
+example of usage: Assay the wavelength of light emitted by excited Neon atoms. Count of geese flying over a house.
+
+# Use ':&gt; ' for links: IRIs, prefixed names, or labels
+subclass of:&gt; planned process
+
+# Use ':&gt;&gt; ' for complex expressions
+subclass of:&gt;&gt; realizes some 'evaluant role'
+
+# Use indentation to continue long lines
+subclass of:&gt;&gt; has_specified_input some
+  ('material entity'
+   and ('has role' some 'evaluant role'))
+
+subclass of:&gt;&gt; has_specified_output some
+  ('information content entity'
+   and ('is about' some
+      ('material entity'
+       and ('has role' some 'evaluant role'))))</pre>
+    </div>
+
+    <div id="annotations" role="tabpanel" class="tab-pane">
+      <pre id="annotations-editor" class="editor">
+# Easily add OWL annotations, even annotations on annotations...
+ex:another-subject
+label: Another Subject
+comment: A comment on 'label: Another Subject'.
+&gt; comment: An annotation on a comment.
+&gt;&gt; comment: An annotation on an annotation.</pre>
+    </div>
+
+    <div id="graphs" role="tabpanel" class="tab-pane">
+      <pre id="graphs-editor" class="editor">
+# Change to a named graph
+GRAPH ex:example-graph
+label: Example Graph
+
+ex:first-example-subject
+comment: This subject is in the Example Graph.
+
+# Then back to the default graph
+GRAPH
+
+ex:second-example-subject
+comment: This subject is in the default graph.
+
+# WARNING: OWL only uses the default graph!</pre>
+    </div>
   </div>
 
+  <!--
   <div id="controls" class="row text-center" style="height: 32pt">
     <button type="button" id="convert" class="btn btn-primary">Convert!</button>
     from HOWL to
     <a href="https://en.wikipedia.org/wiki/N-Triples#N-Quads">N-Quads</a>
   </div>
+  -->
 
-  <div class="row">
-    <pre id="results"></pre>
+  <div class="row" style="height: 36pt">
+    <div class="pull-left" style="margin-right: 4pt">
+      <button type="button" id="convert" class="btn btn-primary">Convert!</button>
+    </div>
+    <ul id="results" class="nav nav-tabs">
+      <li role="presentation"><a href="#howl">HOWL</a></li>
+      <li role="presentation"><a href="#nquads">N-Quads</a></li>
+      <li role="presentation" class="active"><a href="#turtle">Turtle</a></li>
+    </ul>
+  </div>
+
+  <div class="row tab-content">
+    <div id="howl" role="tabpanel" class="tab-pane">
+      <pre id="howl-result" class="result"></pre>
+    </div>
+
+    <div id="nquads" role="tabpanel" class="tab-pane">
+      <pre id="nquads-result" class="result"></pre>
+    </div>
+
+    <div id="turtle" role="tabpanel" class="tab-pane active">
+      <pre id="turtle-result" class="result"></pre>
+    </div>
   </div>
 
   <div class="row" style="height: 48pt">
@@ -86,343 +262,175 @@
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/n3-browser.min.js" type="text/javascript" charset="utf-8"></script>
 <script src="js/howl.js" type="text/javascript" charset="utf-8"></script>
 <script>
-var shared = [
-  "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
-  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-  "PREFIX xsd: <http://www.w4.org/2001/XMLSchema#>",
-  "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
-  "PREFIX obo: <http://purl.obolibrary.org/obo/>",
-  "PREFIX ex: <http://example.com/>"
-];
 
-var small_example = [
-  "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
-  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-  "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
-  "PREFIX obo: <http://purl.obolibrary.org/obo/>",
-  "PREFIX ex: <http://example.com/>",
-  "",
-  "LABEL rdf:type: type",
-  "LABEL rdfs:label: label",
-  "LABEL obo:BFO_0000051: has part",
-  "LABEL obo:BFO_0000040: material entity",
-  "",
-  "ex:ontology",
-  "label: Example Ontology",
-  "type:> owl:Ontology",
-  "",
-  "ex:class",
-  "label: Example Class",
-  "type:> owl:Class",
-  "rdfs:subClassOf:>> 'has part' some 'material entity'",
-  "> rdfs:comment: Annotation on subclass axiom."
-];
-
-var example = [
-  "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
-  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-  "PREFIX xsd: <http://www.w4.org/2001/XMLSchema#>",
-  "PREFIX owl: <http://www.w3.org/2002/07/owl#>",
-  "PREFIX obo: <http://purl.obolibrary.org/obo/>",
-  "PREFIX OBI: <http://purl.obolibrary.org/obo/OBI_>",
-  "PREFIX BFO: <http://purl.obolibrary.org/obo/BFO_>",
-  "PREFIX RO:  <http://purl.obolibrary.org/obo/RO_>",
-  "PREFIX IAO: <http://purl.obolibrary.org/obo/IAO_>",
-  "",
-  "LABEL rdf:type: type",
-  "LABEL rdfs:label: label",
-  "LABEL rdfs:subClassOf: subclass of",
-  "LABEL owl:equivalentClass: equivalent to",
-  "",
-  "obo:obi/obi_core.owl",
-  "type:> owl:Ontology",
-  "owl:versionIRI:> obo:obi/2016-04-21/obi_core.owl",
-  "",
-  "BFO:0000040",
-  "label: material entity",
-  "type:> owl:Class",
-  "",
-  "BFO:0000051",
-  "label: has part",
-  "type:> owl:ObjectProperty",
-  "",
-  "BFO:0000055",
-  "label: realizes",
-  "type:> owl:ObjectProperty",
-  "",
-  "IAO:0000030",
-  "label: information content entity",
-  "type:> owl:Class",
-  "",
-  "IAO:0000112",
-  "label: example of usage",
-  "type:> owl:AnnotationProperty",
-  "",
-  "IAO:0000115",
-  "label: definition",
-  "type:> owl:AnnotationProperty",
-  "",
-  "IAO:0000117",
-  "label: term editor",
-  "type:> owl:AnnotationProperty",
-  "",
-  "IAO:0000118",
-  "label: alternative term",
-  "type:> owl:AnnotationProperty",
-  "",
-  "IAO:0000119",
-  "label: definition source",
-  "type:> owl:AnnotationProperty",
-  "",
-  "IAO:0000136",
-  "label: is about",
-  "type:> owl:ObjectProperty",
-  "",
-  "OBI:0000011",
-  "label: planned process",
-  "type:> owl:Class",
-  "",
-  "OBI:0000067",
-  "label: evaluant role",
-  "type:> owl:Class",
-  "",
-  "OBI:0000070",
-  "label: assay",
-  "type:> owl:Class",
-  "",
-  "OBI:0000293",
-  "label: has_specified_input",
-  "type:> owl:ObjectProperty",
-  "",
-  "OBI:0000299",
-  "label: has_specified_output",
-  "type:> owl:ObjectProperty",
-  "",
-  "OBI:0000417",
-  "label: achieves_planned_objective",
-  "type:> owl:ObjectProperty",
-  "",
-  "OBI:0000441",
-  "label: assay objective",
-  "type:> owl:Class",
-  "",
-  "RO:0000087",
-  "label: has role",
-  "type:> owl:ObjectProperty",
-  "",
-  "assay",
-  "definition: A planned process with the objective to produce information about the material entity that is the evaluant, by physically examining it or its proxies.",
-  "definition source: OBI branch derived",
-  "example of usage: Assay the wavelength of light emitted by excited Neon atoms. Count of geese flying over a house.",
-  "term editor: PlanAndPlannedProcess Branch",
-  "alternative term: measuring",
-  "alternative term: scientific observation",
-  "equivalent to:>> achieves_planned_objective some 'assay objective'",
-  "subclass of:>> 'planned process'",
-  "subclass of:>> has_specified_input some",
-  "  ('material entity'",
-  "   and ('has role' some 'evaluant role'))",
-  "subclass of:>> has_specified_output some",
-  "  ('information content entity'",
-  "   and ('is about' some",
-  "      ('material entity'",
-  "       and ('has role' some 'evaluant role'))))",
-  "subclass of:>> realizes some 'evaluant role'"
-];
-
-var comments = [
-  "# Lines that start with '#' are just comments"
-];
-
-var base = [
-  "# Set a base IRI...",
-  "BASE <http://example.com/>",
-  "",
-  "# then use relative IRIs",
-  "<ontology>",
-  "<my-label>: Example Ontology"
-];
-
-var prefixes = [
-  "# Define your prefixes...",
-  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-  "PREFIX ex: <http://example.com/>",
-  "",
-  "# then abbreviate your IRIs",
-  "ex:ontology",
-  "rdfs:label: Example Ontology"
-];
-
-var labels = [
-  "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
-  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-  "PREFIX obo: <http://purl.obolibrary.org/obo/>",
-  "PREFIX ex: <http://example.com/>",
-  "",
-  "# Specify your own labels...",
-  "LABEL rdf:type: type",
-  "LABEL rdfs:label: label",
-  "LABEL obo:IAO_0000115: definition",
-  "",
-  "# then use them anywhere",
-  "ex:frog",
-  "label: Frog",
-  "definition: A circular definition of frog.",
-  "",
-  "# Your 'rdfs:label:' statments also specify labels!",
-  "ex:kermit",
-  "type:> Frog"
-]
-
-var types = [
-  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-  "PREFIX xsd: <http://www.w4.org/2001/XMLSchema#>",
-  "PREFIX ex: <http://example.com/>",
-  "",
-  "LABEL rdfs:label: label",
-  "LABEL rdfs:comment: comment",
-  "",
-  "# Set a language or datatype...",
-  "TYPE label: @en",
-  "TYPE comment: xsd:string",
-  "",
-  "ex:ontology",
-  "# that will apply by default",
-  "label: Example Ontology",
-  "comment: A comment string",
-  "",
-  "# but can be overridden",
-  "label: Un autre nom@fr",
-  "comment: 1000^^xsd:integer"
-];
-
-var statements = [
-  "LABEL obo:BFO_0000051: has part",
-  "LABEL obo:BFO_0000040: material entity",
-  "",
-  "# Set the current subject",
-  "ex:subject",
-  "",
-  "# Use ': ' for literal values",
-  "rdfs:label: Example Subject",
-  "",
-  "# Use ':> ' for links",
-  "rdf:type:> owl:Class",
-  "",
-  "# Use ':>> ' for complex expressions",
-  "rdfs:subClassOf:>> 'has part' some 'material entity'",
-  "",
-  "# Use indentation to continue long lines",
-  "rdfs:comment: Values can span multiple lines,",
-  "  and include blank lines...",
-  "",
-  "  as long as each non-blank line is indented two spaces."
-];
-
-var annotations = [
-  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-  "PREFIX ex: <http://example.com/>",
-  "",
-  "LABEL rdfs:label: label",
-  "LABEL rdfs:comment: comment",
-  "",
-  "# Easily add OWL annotations, even annotations on annotations...",
-  "ex:ontology",
-  "label: Example Ontology",
-  "comment: A comment on Example Ontology.",
-  "> comment: An annotation on a comment.",
-  ">> comment: An annotation on an annotation.",
-];
-
-var graphs = [
-  "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
-  "PREFIX ex: <http://example.com/>",
-  "",
-  "# Change to a named graph",
-  "GRAPH ex:graph",
-  "rdfs:label: Example Graph",
-  "",
-  "ex:first",
-  "rdfs:comment: This subject is in the Example Graph.",
-  "",
-  "# Then back to the default graph",
-  "GRAPH",
-  "",
-  "ex:second",
-  "rdfs:comment: This subject is in the default graph.",
-  "",
-  "# WARNING: OWL only uses the default graph!"
-];
-
-function join(args) {
-  var outputs = [];
-  for (var i = 0; i < arguments.length; i++) {
-    outputs[i] = arguments[i].join("\n");
-  }
-  return outputs.join("\n\n");
-}
-
-var code = {
-  "Example":     join(example),
-  "Comments":    join(comments),
-  "Base":        join(base),
-  "Prefixes":    join(prefixes),
-  "Labels":      join(labels),
-  "Types":       join(types),
-  "Statements":  join(shared, statements),
-  "Annotations": join(annotations),
-  "Graphs":      join(graphs)
-};
-
-var editor = ace.edit("editor");
-editor.setTheme("ace/theme/dawn");
-editor.session.setMode("ace/mode/howl");
-editor.session.setUseWrapMode(true);
-
-var results = ace.edit("results");
-results.setTheme("ace/theme/dawn");
-results.session.setMode("ace/mode/nquads");
-results.setReadOnly(true);
-
-function selectFirstComment() {
-  var lines = editor.getSession().getDocument().getAllLines();
-  editor.gotoLine(1);
-  editor.clearSelection();
-  for (var i = lines.length - 1; i >= 0; i--) {
-    if (lines[i].startsWith("#")) {
-      var selection = editor.getSelection();
-      var range = selection.getLineRange(i);
-      selection.addRange(range);
-    }
-  }
-  editor.scrollToRow(0);
-}
-
-function setExample(label) {
-  var content = code[label];
-  editor.setValue(content);
-  window.setTimeout(selectFirstComment, 100);
-  convert();
-}
-setExample("Example");
-window.setTimeout(function() {editor.scrollToRow(91)}, 100);
-
-$('#selector a').click(function (e) {
+$('#editors a').click(function (e) {
   e.preventDefault()
   $(this).tab('show')
-  setExample(this.innerHTML);
+  console.log(e.target);
 })
 
+$('#results a').click(function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+
+var editors = {};
+
+var ps = document.getElementsByTagName("pre");
+for (var i=0; i < ps.length; i++) {
+  var p = ps[i];
+  var editor = ace.edit(p);
+  editor.setTheme("ace/theme/dawn");
+  editor.$blockScrolling = Infinity;
+
+  if (p.id == "tables-editor") {
+    editor.session.setMode("ace/mode/turtle");
+  } else if (p.id.startsWith("nquads")) {
+    editor.session.setMode("ace/mode/nquads");
+  } else if (p.id.startsWith("turtle")) {
+    editor.session.setMode("ace/mode/turtle");
+  } else {
+    editor.session.setMode("ace/mode/howl");
+  }
+
+  if (p.id.endsWith("-result")) {
+    editor.session.setUseWrapMode(false);
+    editor.setReadOnly(true);
+  } else {
+    editor.session.setUseWrapMode(true);
+  }
+
+  editors[p.id] = editor;
+}
+
+var selection = editors["subjects-editor"].getSelection();
+for (var i=2; i >= 0; i--) {
+  var range = selection.getLineRange(i);
+  selection.addRange(range);
+}
+
+function template(table) {
+  var lines = table.split("\n");
+  var results = [];
+  var headers = null;
+
+  for (var i=0; i < lines.length; i++) {
+    var line = lines[i];
+
+    if ($.trim(line) == "") {
+      continue;
+    }
+    
+    if (line.startsWith("#")) {
+      results.push(line);
+      continue;
+    }
+
+    var cells = lines[i].split(/\s\s+/);
+    if (headers == null) {
+      headers = cells;
+      continue;
+    }
+
+    for (var j=0; j < cells.length; j++) {
+      if (headers[j] == "SUBJECT") {
+        results.push("");
+        results.push(cells[j]);
+      } else {
+        results.push(headers[j] + " " + cells[j]);
+      }
+    }
+  }
+
+  return results.join("\n");
+}
+
+function assemble() {
+  var values = [];
+  var es = [
+    "Prefixes", "Base", "Labels", "Types",
+    "Tables", "Subjects", "Statements",
+    "Annotations", "Graphs"
+  ];
+  for (var i=0; i < es.length; i++) {
+    var e = es[i].toLowerCase() + "-editor";
+    var value = "### " + es[i] + "\n\n";
+    if (e == "tables-editor") {
+      value += template(editors[e].getValue());
+    } else {
+      value += editors[e].getValue();
+    }
+    values.push(value);
+  }
+  var value = "# All the pieces above in a single HOWL file.\n\n"
+            + values.join("\n\n");
+  var editor = editors["howl-result"];
+  editor.setValue(value);
+  editor.clearSelection();
+  editor.getSelection().moveCursorTo(0, 0, false);
+}
+
+function nquads() {
+  var value = editors["howl-result"].getValue();
+  try {
+    value = "# The assembled HOWL file converted to N-Quads format:\n"
+          + "# https://en.wikipedia.org/wiki/N-Triples#N-Quads\n\n"
+          + howl.api.convert_to_quads(value);
+  } catch (e) {
+    value = e.message;
+  }
+  var editor = editors["nquads-result"];
+  editor.setValue(value);
+  editor.clearSelection();
+  editor.getSelection().moveCursorTo(0, 0, false);
+}
+
+function turtle() {
+  var value = editors["nquads-result"].getValue();
+  var parser = N3.Parser({ format: 'N-Quads' });
+  var writer = N3.Writer({
+    prefixes: {
+      rdf: "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      rdfs: "http://www.w3.org/2000/01/rdf-schema#",
+      xsd: "http://www.w4.org/2001/XMLSchema#",
+      owl: "http://www.w3.org/2002/07/owl#",
+      obo: "http://purl.obolibrary.org/obo/",
+      ex: "http://example.com/"
+    }
+  });
+  parser.parse(value, function(error, triple, prefixes) {
+    if (triple) {
+      writer.addTriple(triple.subject, triple.predicate, triple.object);
+    } else {
+      writer.end(function (error, result) {
+        value = "# The assembled HOWL file converted to Turtle format:\n"
+              + "# https://en.wikipedia.org/wiki/Turtle_(syntax)\n\n"
+              + result;
+        var editor = editors["turtle-result"];
+        editor.setValue(value);
+        editor.clearSelection();
+        editor.getSelection().moveCursorTo(0, 0, false);
+      });
+    }
+  });
+}
+
 function convert() {
-  results.setValue(howl.api.convert_to_quads(editor.getValue()).toString());
-  results.clearSelection();
-  results.getSelection().moveCursorTo(0, 0, false);
+  editors["howl-result"].setValue("# Converting...");
+  editors["nquads-result"].setValue("# Converting...");
+  editors["turtle-result"].setValue("# Converting...");
+  assemble();
+  nquads();
+  turtle();
 }
 
 document.getElementById("convert").onclick = convert;
 convert();
+
+
 </script>
 
 </body>
