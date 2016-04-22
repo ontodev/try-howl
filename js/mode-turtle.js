@@ -12,6 +12,14 @@ var TurtleHighlightRules = function() {
         regex : "^#.*$"
       },
       {
+        token : ["keyword", "string", "keyword"],
+        regex : '(")([^"]+)(")'
+      },
+      {
+        token : ["keyword", "variable", "keyword"],
+        regex : "(<)(\\S+)(>)"
+      },
+      {
         token : "keyword",
         regex : "@prefix"
       },
@@ -20,16 +28,8 @@ var TurtleHighlightRules = function() {
         regex : "a"
       },
       {
-        token : ["keyword", "variable", "keyword"],
-        regex : "(<)(\\S+)(>)"
-      },
-      {
         token : "variable",
-        regex : "\\S+:\\S*"
-      },
-      {
-        token : ["keyword", "string", "keyword"],
-        regex : '(")([^"]+)(")'
+        regex : "\\S+:[^\\s\\.;]*"
       },
       {
         token : ["keyword", "variable"],
@@ -41,7 +41,11 @@ var TurtleHighlightRules = function() {
       },
       {
         token : "keyword",
-        regex : "\\.\\s*$"
+        regex : "\\."
+      },
+      {
+        token : "keyword",
+        regex : ";"
       }
     ]
   }
