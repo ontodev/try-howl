@@ -7,30 +7,34 @@ var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;
 var NquadsHighlightRules = function() {
   this.$rules = {
     "start": [
-    {
-      token : ["keyword", "variable", "keyword"],
-      regex : "(<)(\\S+)(>)"
-    },
-    {
-      token : "variable",
-      regex : "_:\\w+"
-    },
       {
-        token : ["keyword", "text", "keyword"],
+        token : "comment",
+        regex : "^#.*$"
+      },
+      {
+        token : ["keyword", "variable", "keyword"],
+        regex : "(<)(\\S+)(>)"
+      },
+      {
+        token : "variable",
+        regex : "_:\\w+"
+      },
+      {
+        token : ["keyword", "string", "keyword"],
         regex : '(")([^"]+)(")'
       },
       {
         token : ["keyword", "variable"],
         regex : "(@)(\\w+)"
       },
-        {
-          token : "keyword",
-          regex : "\\^\\^"
-        },
-        {
-          token : "keyword",
-          regex : "\\.\\s*$"
-        }
+      {
+        token : "keyword",
+        regex : "\\^\\^"
+      },
+      {
+        token : "keyword",
+        regex : "\\.\\s*$"
+      }
     ]
   }
 };
