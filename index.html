@@ -62,12 +62,12 @@
     <div id="prefixes" role="tabpanel" class="tab-pane">
       <pre id="prefixes-editor" class="editor">
 # Define your prefixes...
-PREFIX rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
-PREFIX rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt;
-PREFIX xsd: &lt;http://www.w4.org/2001/XMLSchema#&gt;
-PREFIX owl: &lt;http://www.w3.org/2002/07/owl#&gt;
-PREFIX obo: &lt;http://purl.obolibrary.org/obo/&gt;
-PREFIX ex: &lt;http://example.com/&gt;
+PREFIX rdf:&gt; http://www.w3.org/1999/02/22-rdf-syntax-ns#
+PREFIX rdfs:&gt; http://www.w3.org/2000/01/rdf-schema#
+PREFIX xsd:&gt; http://www.w4.org/2001/XMLSchema#
+PREFIX owl:&gt; http://www.w3.org/2002/07/owl#
+PREFIX obo:&gt; http://purl.obolibrary.org/obo/
+PREFIX ex:&gt; http://example.com/
 
 # then abbreviate your IRIs
 # so &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;
@@ -77,7 +77,7 @@ PREFIX ex: &lt;http://example.com/&gt;
     <div id="base" role="tabpanel" class="tab-pane">
       <pre id="base-editor" class="editor">
 # Set a base IRI...
-BASE &lt;http://example.com/&gt;
+BASE http://example.com/
 
 # then use relative IRIs in angle brackets: &lt; &gt;
 # so &lt;http://example.com/howl-demo.owl&gt; 
@@ -112,8 +112,8 @@ type:&gt; Frog</pre>
     <div id="types" role="tabpanel" class="tab-pane">
       <pre id="types-editor" class="editor">
 # Set a language or datatype...
-TYPE label: @en
-TYPE comment: xsd:string
+TYPE label:&gt; @en
+TYPE comment:&gt; xsd:string
 
 ex:french-fries
 # that will apply by default
